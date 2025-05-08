@@ -1,57 +1,93 @@
 ---
 layout: post
-title: "Extracting Vowel Quality Using Python"
+title: "Measuring Vowel Duration and Formants in Python"
 date: 2025-05-07
 ---
 
-## 🎯 Goal
-
-This tutorial shows how to extract **vowel formants** (F1, F2) from a `.wav` audio file using the [parselmouth](https://github.com/YannickJadoul/Parselmouth) library, a Python wrapper for Praat.
+This tutorial shows how to extract **vowel duration** and **formants** (F1 and F2), two key acoustic features used to analyze vowel quality. While this can be done manually using software like **Praat**, it becomes time-consuming when working with large datasets. The Python code provided below automates the process for multiple `.wav` recordings.
 
 ---
 
-## 📦 Step 1: Install Required Package
+## Requirements
 
-You need to install `praat-parselmouth`. Run this in your terminal:
+1. You need `.wav` recordings of **isolated vowels** which are saved in a single forlder.
+2. Install `parselmouth` if you haven't already:
 
-```bash
-pip install praat-parselmouth
-
+    ```bash
+    pip install praat-parselmouth
+    ```
 
 ---
 
-## Formant Extraction
+## Vowel Duration
 
+To measure vowel duration, we'll use the `librosa` library to calculate energy over time and detect how long the vowel lasts.
+
+```python
+import os
+import librosa
+import numpy as np
+import csv
+
+def vowel_duration(folder_path, threshold=0.01, output_csv="vowel_duration.csv"):
+    """
+    Estimate vowel duration (in milliseconds) from .wav files in a folder.
+    Saves the output as a CSV file.
+    """
+    durations = {}
+
+    for fname in os.listdir(folder_path):
+        if fname.endswith(".wav"):
+            path = os.path.join(folder_path, fname)
+            y, sr = librosa.load(path)
+            energy = librosa.feature.rms(y=y)[0]
+            frames = np.nonzero(energy > threshold)[0]
+            times = librosa.frames_to_time(frames, sr=sr)
+
+            duration_ms = (times[-1] - times[0]) * 1000 if len(times) > 0 else 0.0
+            durations[fname] = duration_ms
+
+    with open(output_csv, "w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Filename", "Vowel Duration (ms)"])
+        for fname, duration in durations.items():
+            writer.writerow([fname, f"{duration:.1f}"])
+
+    print(f"\nResults saved to: {output_csv}")
+
+---
+
+## Vowel Formants (F1 & F2)
+
+To analyze vowel quality, the first (F1) and second (F2) formants are commonly used. The code below uses parselmouth (a Python wrapper for Praat) to extract average formant values for each file.
+
+import os
 import parselmouth
 import numpy as np
-import matplotlib.pyplot as plt
+import csv
 
-def extract_formants(audio_path):
-    snd = parselmouth.Sound(audio_path)
-    formant = snd.to_formant_burg()
+def vowel_formants(folder_path, output_csv="vowel_formants.csv"): 
+    with open(output_csv, "w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(["Filename", "Average F1 (Hz)", "Average F2 (Hz)"])
 
-    times = np.linspace(0, snd.duration, 100)
-    f1_list = []
-    f2_list = []
+        for fname in os.listdir(folder_path):
+            if fname.endswith(".wav"):
+                path = os.path.join(folder_path, fname)
+                sound = parselmouth.Sound(path)
+                formant = sound.to_formant_burg()
+                times = np.linspace(0, sound.duration, num=100)
 
-    for t in times:
-        f1 = formant.get_value_at_time(1, t)
-        f2 = formant.get_value_at_time(2, t)
-        if f1 and f2:
-            f1_list.append(f1)
-            f2_list.append(f2)
+                f1_values, f2_values = [], []
+                for t in times:
+                    f1 = formant.get_value_at_time(1, t)
+                    f2 = formant.get_value_at_time(2, t)
+                    if f1 and f2:
+                        f1_values.append(f1)
+                        f2_values.append(f2)
 
-    return f1_list, f2_list
+                avg_f1 = np.mean(f1_values) if f1_values else 0.0
+                avg_f2 = np.mean(f2_values) if f2_values else 0.0
+                writer.writerow([fname, round(avg_f1, 1), round(avg_f2, 1)])
 
-# Example usage
-f1s, f2s = extract_formants("vowel_a.wav")
-
-# Plot F1 vs F2 (vowel space)
-plt.scatter(f2s, f1s)
-plt.xlabel("F2 (Hz)")
-plt.ylabel("F1 (Hz)")
-plt.title("Vowel Formant Plot (F1 vs F2)")
-plt.gca().invert_yaxis()
-plt.show()
-
----
+    print(f"\nFormant results saved to: {output_csv}")
