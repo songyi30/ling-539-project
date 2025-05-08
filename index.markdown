@@ -54,6 +54,7 @@ def vowel_duration(folder_path, threshold=0.01, output_csv="vowel_duration.csv")
             writer.writerow([fname, f"{duration:.1f}"])
 
     print(f"\nResults saved to: {output_csv}")
+```
 
 ---
 
@@ -61,6 +62,7 @@ def vowel_duration(folder_path, threshold=0.01, output_csv="vowel_duration.csv")
 
 To analyze vowel quality, the first (F1) and second (F2) formants are commonly used. The code below uses parselmouth (a Python wrapper for Praat) to extract average formant values for each file.
 
+```python
 import os
 import parselmouth
 import numpy as np
@@ -91,3 +93,4 @@ def vowel_formants(folder_path, output_csv="vowel_formants.csv"):
                 writer.writerow([fname, round(avg_f1, 1), round(avg_f2, 1)])
 
     print(f"\nFormant results saved to: {output_csv}")
+```
