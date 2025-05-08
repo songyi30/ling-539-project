@@ -10,7 +10,7 @@ This tutorial shows how to extract **vowel duration** and **formants** (F1 and F
 
 ## Requirements
 
-1. You need `.wav` recordings of **isolated vowels** which are saved in a single forlder.
+1. You need `.wav` recordings of **isolated vowels** which are saved in a single **forlder**.
 2. Install `parselmouth` if you haven't already:
 
     ```bash
@@ -55,6 +55,8 @@ def vowel_duration(folder_path, threshold=0.01, output_csv="vowel_duration.csv")
 
     print(f"\nResults saved to: {output_csv}")
 ```
+
+
 
 ---
 
