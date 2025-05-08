@@ -55,7 +55,7 @@ def vowel_duration(folder_path, threshold=0.01, output_csv="vowel_duration.csv")
 
     print(f"\nResults saved to: {output_csv}")
 ```
-# Output
+### Output
 In the same folder where the audio files are saved, you will find a CSV file named **vowel_duration.csv**.
 
 
@@ -97,5 +97,5 @@ def vowel_formants(folder_path, output_csv="vowel_formants.csv"):
 
     print(f"\nFormant results saved to: {output_csv}")
 ```
-# Output
+### Output
 In the same folder where the audio files are saved, you will find a CSV file named **vowel_formants.csv**.
