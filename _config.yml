@@ -29,7 +29,6 @@ url: "https://songyi30.github.io"
 markdown: kramdown
 
 # Build settings
-theme: minima
 plugins:
   - jekyll-feed
 
