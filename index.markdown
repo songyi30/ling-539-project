@@ -1,7 +1,6 @@
 ---
 layout: post
 title: "Measuring Vowel Duration and Formants in Python"
-date: 2025-05-07
 ---
 
 This tutorial shows how to extract **vowel duration** and **formants** (F1 and F2), two key acoustic features used to analyze vowel quality. While this can be done manually using software like [Praat](https://www.fon.hum.uva.nl/praat/)., it becomes time-consuming when working with large datasets. The Python code provided below automates the process for multiple `.wav` recordings.
@@ -56,8 +55,7 @@ def vowel_duration(folder_path, threshold=0.01, output_csv="vowel_duration.csv")
     print(f"\nResults saved to: {output_csv}")
 ```
 ### Output
-In the same folder where the audio files are saved, you will find a CSV file named **vowel_duration.csv**.
-
+After running the script, a file named vowel_duration.csv will be saved in the same folder. It lists the estimated duration for each .wav file.
 
 ---
 
@@ -102,4 +100,4 @@ def vowel_formants(folder_path, output_csv="vowel_formants.csv"): #make sure tha
     print(f"\nFormant results saved to: {output_csv}")
 ```
 ### Output
-In the same folder where the audio files are saved, you will find a CSV file named **vowel_formants.csv**.
+A file named vowel_formants.csv will be saved in the same folder. It contains the average F1 and F2 values for each audio file.
