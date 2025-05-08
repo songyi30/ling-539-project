@@ -21,7 +21,7 @@ This tutorial shows how to extract **vowel duration** and **formants** (F1 and F
 
 ## Vowel Duration
 
-To measure vowel duration, we'll use the `librosa` library to calculate energy over time and detect how long the vowel lasts.
+To measure vowel duration, we'll use the `librosa` library to calculate vowel amplitude (energy) and detect how long the vowel lasts. librosa is widely used for analyzing and processing audio signals. In this tutorial, it is used to load .wav files, calculate short-time energy, and convert audio frames to time values in order to estimate vowel duration.
 
 ```python
 import os
@@ -55,14 +55,15 @@ def vowel_duration(folder_path, threshold=0.01, output_csv="vowel_duration.csv")
 
     print(f"\nResults saved to: {output_csv}")
 ```
-
+# Output
+In the same folder where the audio files are saved, you will find a CSV file named **vowel_duration.csv**.
 
 
 ---
 
 ## Vowel Formants (F1 & F2)
 
-To analyze vowel quality, the first (F1) and second (F2) formants are commonly used. The code below uses parselmouth (a Python wrapper for Praat) to extract average formant values for each file.
+To analyze vowel quality, the first (F1) and second (F2) formants are commonly used. The code below uses parselmouth (a Python wrapper for Praat) to extract average formant values for each file. parselmouth is a Python interface to Praat, a software tool commonly used in phonetics research. It allows users to access Praat's functionality—such as formant tracking and pitch analysis—directly from Python. In this tutorial, parselmouth is used to extract the first and second formants (F1 and F2), which are key acoustic features for analyzing vowel quality across multiple audio files.
 
 ```python
 import os
@@ -96,3 +97,5 @@ def vowel_formants(folder_path, output_csv="vowel_formants.csv"):
 
     print(f"\nFormant results saved to: {output_csv}")
 ```
+# Output
+In the same folder where the audio files are saved, you will find a CSV file named **vowel_formants.csv**.
